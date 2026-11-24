@@ -1,0 +1,137 @@
+{
+  "results": {
+    "gandhi": [
+      {
+        "model": "Held-out human text",
+        "perplexity": null,
+        "copy_rate": 3.483016695451928,
+        "distinct_1": 0.25669859780646953,
+        "distinct_2": 0.7613163010274924
+      },
+      {
+        "model": "Markov order 1",
+        "perplexity": 229.6390632261082,
+        "copy_rate": 0.0,
+        "distinct_1": 0.3465888361911711,
+        "distinct_2": 0.8291970802919708
+      },
+      {
+        "model": "Markov order 2",
+        "perplexity": 222.22289139435006,
+        "copy_rate": 5.280821790269344,
+        "distinct_1": 0.35018050541516244,
+        "distinct_2": 0.8407367280606717
+      },
+      {
+        "model": "Markov order 3",
+        "perplexity": 230.97985095804216,
+        "copy_rate": 53.99740063761256,
+        "distinct_1": 0.34023991275899673,
+        "distinct_2": 0.8130909090909091
+      },
+      {
+        "model": "Markov order 4",
+        "perplexity": 234.8834046344397,
+        "copy_rate": 87.06618447021529,
+        "distinct_1": 0.32996389891696754,
+        "distinct_2": 0.8024557602022391
+      }
+    ],
+    "lincoln": [
+      {
+        "model": "Held-out human text",
+        "perplexity": null,
+        "copy_rate": 0.44001388814700065,
+        "distinct_1": 0.2683192590574775,
+        "distinct_2": 0.8032697547683924
+      },
+      {
+        "model": "Markov order 1",
+        "perplexity": 202.03053917146255,
+        "copy_rate": 0.0,
+        "distinct_1": 0.3214019388516033,
+        "distinct_2": 0.8135024244684819
+      },
+      {
+        "model": "Markov order 2",
+        "perplexity": 209.4779355944763,
+        "copy_rate": 5.465046023187023,
+        "distinct_1": 0.3116591928251121,
+        "distinct_2": 0.8022429906542056
+      },
+      {
+        "model": "Markov order 3",
+        "perplexity": 224.99686914724094,
+        "copy_rate": 59.91750473577103,
+        "distinct_1": 0.3250093179276929,
+        "distinct_2": 0.7949291573452647
+      },
+      {
+        "model": "Markov order 4",
+        "perplexity": 230.99877553344476,
+        "copy_rate": 89.58323340249368,
+        "distinct_1": 0.3140619171950765,
+        "distinct_2": 0.7988805970149254
+      }
+    ],
+    "obama": [
+      {
+        "model": "Held-out human text",
+        "perplexity": null,
+        "copy_rate": 0.4973988719929956,
+        "distinct_1": 0.27528505849252183,
+        "distinct_2": 0.8024289099526066
+      },
+      {
+        "model": "Markov order 1",
+        "perplexity": 250.16370007079288,
+        "copy_rate": 0.0,
+        "distinct_1": 0.3563175549757734,
+        "distinct_2": 0.8624161073825504
+      },
+      {
+        "model": "Markov order 2",
+        "perplexity": 253.4056507518699,
+        "copy_rate": 6.541690590505335,
+        "distinct_1": 0.37380073800738006,
+        "distinct_2": 0.867109634551495
+      },
+      {
+        "model": "Markov order 3",
+        "perplexity": 272.4685744178763,
+        "copy_rate": 56.400551126177355,
+        "distinct_1": 0.36007462686567165,
+        "distinct_2": 0.8394923478910041
+      },
+      {
+        "model": "Markov order 4",
+        "perplexity": 280.09455773802307,
+        "copy_rate": 88.2458649127847,
+        "distinct_1": 0.35442101368849427,
+        "distinct_2": 0.8275351591413768
+      }
+    ]
+  },
+  "cross_perplexity": [
+    [
+      222.22289139435006,
+      577.2415136532594,
+      1106.9896024296952
+    ],
+    [
+      665.3083296776954,
+      209.4779355944763,
+      972.9393379112483
+    ],
+    [
+      869.7056143915356,
+      742.7531992925045,
+      253.4056507518699
+    ]
+  ],
+  "speakers": [
+    "gandhi",
+    "lincoln",
+    "obama"
+  ]
+}
