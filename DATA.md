@@ -1,37 +1,41 @@
 # Data sources
 
-Everything in `data/` can be rebuilt with:
+Active speakers: **Narendra Modi**, **Donald Trump** and **Barack Obama**. Obama is a placeholder until the third speaker is chosen. Each speaker is capped at roughly 80k words, so differences between speakers come from style and not from how much text each one has.
+
+| Speaker | Words (cleaned) | Speeches | Source |
+|---|---:|---:|---|
+| Narendra Modi | 81,614 | 47 | English texts on the Prime Minister's Office site, [pmindia.gov.in/en/tag/pmspeech](https://www.pmindia.gov.in/en/tag/pmspeech/), 2025–2026. The list is in `data/sources/modi.txt` and the raw export in `data/sources/modi_browser_export.json`. |
+| Donald Trump | 85,809 | 34 | Remarks on the archived Trump White House site, [trumpwhitehouse.archives.gov/remarks](https://trumpwhitehouse.archives.gov/remarks/), 2020–2021: rallies at airports, addresses to the nation, the UN General Assembly, commencement speeches, the farewell address. The list is in `data/sources/trump.txt`. |
+| Barack Obama | 67,074 | 14 | The archived Obama White House site: both inaugurals, five State of the Union addresses, Cairo, Tucson, Brussels, Selma, Charleston, Havana, and the farewell address. URLs are in `fetch_data.py`. |
+
+## Rebuilding the dataset
 
 ```bash
-python fetch_data.py      # downloads raw text into data/raw/<speaker>/
-python clean.py           # cleans and merges into data/speakers/<speaker>.txt
+python fetch_data.py trump obama     # downloads into data/raw/<speaker>/
+python fetch_data.py modi            # imports data/sources/modi_browser_export.json
+python clean.py                      # -> data/speakers/<speaker>.txt
 ```
 
-| Speaker | Words (cleaned) | Era / style | Source | Licence |
-|---|---:|---|---|---|
-| Mahatma Gandhi | 73,551 | 1919–1922 essays and speeches on non-co-operation, Khilafat, swaraj; moral, plain, argumentative | *Freedom's Battle: Being a Comprehensive Collection of Writings and Speeches on the Present Situation* (2nd ed., 1922), [Project Gutenberg #10366](https://www.gutenberg.org/ebooks/10366) | Public domain |
-| Abraham Lincoln | 39,912 | 1837–1865 speeches; long legal reasoning, 19th-century rhetoric | [Gutenberg #48364](https://www.gutenberg.org/ebooks/48364) *Noted Speeches of Abraham Lincoln*: Cooper Union address, First and Second Inaugurals, Gettysburg Address, Ottawa debate reply. [Gutenberg #3253](https://www.gutenberg.org/ebooks/3253) *Papers and Writings*: Lyceum Address (1837), Peoria Speech (1854), Farewell Address at Springfield (1861) | Public domain |
-| Barack Obama | 67,074 | 2009–2017 presidential addresses; modern, short sentences, applause lines | 14 transcripts from the archived Obama White House site, [obamawhitehouse.archives.gov](https://obamawhitehouse.archives.gov/briefing-room/speeches-and-remarks): both inaugurals, the 2011–2015 State of the Union addresses, Cairo (2009), Tucson memorial (2011), Brussels (2014), Selma 50th anniversary (2015), Charleston eulogy (2015), Havana (2016), and the Farewell Address (2017). Exact URLs are listed in `fetch_data.py`. | Works of the US federal government, public domain in the US (17 U.S.C. § 105) |
+- **Trump:** `python fetch_data.py --discover trump` rebuilds the URL list from the archive. It skips formats that are mostly Q&A (departures, roundtables, bilaterals, press conferences, town halls) and stops at about 80k words.
+- **Modi:** pmindia.gov.in and pib.gov.in refuse non-browser clients, so the text was exported once from a normal Chrome session with `scripts/modi_browser_export.js`. That script fetches the speech listing and pages at about 3 requests per second and downloads a JSON file. To refresh it, run the script in the browser console on the site, then run `python fetch_data.py modi --modi-json <downloaded file>`.
 
-Gutenberg files are downloaded from the PGLAF mirror (`gutenberg.pglaf.org`), which serves the same files as gutenberg.org.
+## Important notes about the text
 
-## Why not APJ Abdul Kalam?
-
-The first plan used Kalam, Gandhi and Obama. Kalam died in 2015, so his speeches and books are still under copyright and there is no public-domain collection to use. Lincoln replaces him. Lincoln's style differs a lot from both of the others, which makes the "guess the speaker" game and the evaluation more interesting.
-
-## What the pipeline removes
-
-`fetch_data.py`:
-- Gandhi: drops Gutenberg headers and the editor's introduction by C. Rajagopalachari. Some letters from other people that Gandhi quoted in full before replying to them are still in the text.
-- Lincoln: keeps only Lincoln's own words. It drops the biographical sketches, Douglas's opening speech, the Emancipation Proclamation (a legal document, not a speech) and the editor's narration inside the Peoria speech.
-- Obama: drops venue and time headers, `END` markers, page furniture, and lines spoken by anyone other than `THE PRESIDENT`.
-
-`clean.py` (`clean_text`): normalises Unicode and quotes, removes URLs, HTML, stage directions such as `(Applause.)` and `[laughter]`, dates, and Gutenberg `_italic_` markers, then collapses whitespace. Each source document becomes one line of `data/speakers/<speaker>.txt`.
+- **Modi's speeches are mostly translations.** He usually speaks in Hindi, and the site publishes an official English rendering. The model therefore learns the style of the PMO's English translations, which follow his structure and catchphrases ("Friends,", "my dear countrymen", "Bharat Mata ki Jai"). The word choice is partly the translator's. Lines in other scripts are dropped.
+- **Trump's transcripts are of delivered remarks**, including ad-libs. Only text spoken by `THE PRESIDENT` is kept: reporter questions (`Q`) and other speakers' turns are removed.
+- **Obama:** venue and time headers and audience lines are removed.
+- `clean.py` also removes stage directions such as `(Applause.)`, URLs, HTML and dates, and normalises quotes and whitespace.
 
 ## Train / validation split
 
-`corpus.py` splits every speaker the same way for every model. It cuts the text into 200-word chunks and sends every 10th chunk to validation (10%). Evaluation results therefore use text that neither the Markov chains nor GPT-2 saw during training.
+`corpus.py` cuts each speaker's text into 200-word chunks and holds out every 10th chunk (10%). All models use the same split.
 
-## Responsible use
+## Retired speakers
 
-Generated text is synthetic. Do not present it as a real quote from any of these people. The app labels every output this way.
+Gandhi (*Freedom's Battle*, Project Gutenberg #10366) and Lincoln (Gutenberg #48364 and #3253) were used in the first version. Their raw text is in `data/retired/`, and `fetch_data.py gandhi lincoln` still downloads them. To reactivate one, move its folder back to `data/raw/` and run `clean.py`.
+
+## Copyright and responsible use
+
+Trump's and Obama's White House transcripts are works of the US federal government and are in the public domain. Modi's speeches are published by the Government of India and are used here only to train models for a non-commercial class project.
+
+Generated text is synthetic. It must never be presented as a real quote from any of these people, and the app labels every output that way. All three are prominent political figures, so be especially careful when sharing outputs: fake political quotes can spread and mislead.
