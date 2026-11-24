@@ -187,3 +187,5 @@ tests/            pytest: cleaning, model, copy-check, app smoke test
 ## Credits
 
 Source texts: Project Gutenberg and the Obama White House archive (public domain; details in [DATA.md](DATA.md)). Built with Python, Streamlit, Plotly, Matplotlib, PyTorch and Hugging Face Transformers. Older Colab notebooks from the first version of the project are kept in `CATbot_Colab_Train.ipynb` and `copycat_bot_colab.ipynb`. They export the old single-speaker format and are not used by the current app.
+#   m a n v i  
+ 
