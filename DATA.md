@@ -1,6 +1,6 @@
 # Data sources
 
-Active speakers: **Narendra Modi**, **Donald Trump** and **Barack Obama**. Obama is a placeholder until the third speaker is chosen. Each speaker is capped at roughly 80k words, so differences between speakers come from style and not from how much text each one has.
+Active speakers: **Narendra Modi**, **Donald Trump** and **Barack Obama**. Each speaker is capped at roughly 80k words, so differences between speakers come from style and not from how much text each one has.
 
 | Speaker | Words (cleaned) | Speeches | Source |
 |---|---:|---:|---|

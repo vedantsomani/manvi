@@ -188,7 +188,7 @@ tests/            pytest: cleaning, model, copy-check, app smoke test
 
 ## Future work
 
-- Choose the third speaker and add more speeches per speaker.
+- Add more speeches per speaker, and more speakers (the pipeline already supports any number).
 - Train on Modi's original Hindi speeches with a multilingual model.
 - Kneser-Ney smoothing and a tuned interpolation for the n-gram model.
 - Parameter-efficient fine-tuning (LoRA) of a larger model, and a copy penalty during decoding.

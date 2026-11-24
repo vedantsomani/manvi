@@ -112,6 +112,8 @@ class MarkovModel:
     def start_tokens(self, start_text, rng):
         if start_text and start_text.strip():
             toks = tokenize(start_text)
+            while toks and toks[0] in PUNCT:  # a start phrase can't begin with punctuation
+                toks.pop(0)
             if toks:
                 return toks
         if not self.starts:
