@@ -24,13 +24,15 @@ def available(speaker):
     return True
 
 
-def load(speaker):
+def load(speaker, base=None):
+    """Fine-tuned model for `speaker`, or the original hub model `base` (e.g. 'gpt2-medium')."""
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
     device = "cuda" if torch.cuda.is_available() else "cpu"
     dtype = torch.bfloat16 if device == "cuda" else torch.float32
-    tok = AutoTokenizer.from_pretrained(gpt2_path(speaker))
-    model = AutoModelForCausalLM.from_pretrained(gpt2_path(speaker), dtype=dtype).to(device).eval()
+    src = base or gpt2_path(speaker)
+    tok = AutoTokenizer.from_pretrained(src)
+    model = AutoModelForCausalLM.from_pretrained(src, dtype=dtype).to(device).eval()
     return model, tok
 
 

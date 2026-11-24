@@ -72,6 +72,15 @@ def evaluate_speaker(sp, use_gpt2):
                      **sample_metrics(samples, index)})
         print(f"  gpt2 eval {time.time() - t0:.0f}s")
         del model
+        # Baseline: the same base model with no fine-tuning, to show what fine-tuning adds.
+        model, tok = neural.load(sp, base=meta["base_model"])
+        ppl = neural.perplexity_per_word_token(model, tok, [detokenize(tokenize(c)) for c in val],
+                                               lambda t: len(tokenize(t)))
+        samples = [tokenize(neural.generate(model, tok, p, max_new_tokens=220, seed=i))[:LENGTH]
+                   for i, p in enumerate(prompts)]
+        rows.insert(-1, {"model": f"GPT-2 base, not fine-tuned ({meta['base_model']})", "perplexity": ppl,
+                         **sample_metrics(samples, index)})
+        del model
     return rows
 
 
@@ -94,6 +103,16 @@ def _style(ax, title, ylabel):
     ax.spines["bottom"].set_color(GRID)
 
 
+def short_label(name):
+    if name.startswith("GPT-2 base"):
+        return "GPT-2\nbase"
+    if name.startswith("GPT-2 fine-tuned"):
+        return "GPT-2\nfine-tuned"
+    if name.startswith("Held-out"):
+        return "Real speech\n(held out)"
+    return name.replace("Markov order ", "Markov\norder ")
+
+
 def grouped_bars(results, metric, title, ylabel, out, fmt="{:.0f}", skip_none=True):
     sps = list(results)
     models = [r["model"] for r in results[sps[0]] if not (skip_none and r[metric] is None)]
@@ -106,16 +125,18 @@ def grouped_bars(results, metric, title, ylabel, out, fmt="{:.0f}", skip_none=Tr
     for j, sp in enumerate(sps):
         vals = {r["model"]: r[metric] for r in results[sp]}
         xs = [i + (j - (len(sps) - 1) / 2) * width for i in range(len(models))]
-        ys = [vals.get(mn) or 0 for mn in models]
+        raw = [vals.get(mn) for mn in models]
+        ys = [v or 0 for v in raw]
         bars = ax.bar(xs, ys, width * 0.92, color=SPEAKER_COLORS[j % 3], label=display_name(sp))
-        for b, y in zip(bars, ys):
-            if y:
+        for b, y, v in zip(bars, ys, raw):
+            if v is not None:
                 ax.text(b.get_x() + b.get_width() / 2, y, fmt.format(y), ha="center", va="bottom",
                         fontsize=7, color=MUTED)
     ax.set_xticks(range(len(models)))
-    ax.set_xticklabels([mn.replace(" fine-tuned ", "\n") for mn in models], fontsize=8.5)
+    ax.set_xticklabels([short_label(mn) for mn in models], fontsize=8)
     _style(ax, title, ylabel)
-    ax.legend(frameon=False, fontsize=8.5, ncol=len(sps), loc="upper left", bbox_to_anchor=(0, 1.02))
+    ax.set_ylim(0, ax.get_ylim()[1] * 1.08)
+    ax.legend(frameon=False, fontsize=8.5, ncol=len(sps), loc="upper center", bbox_to_anchor=(0.5, -0.2))
     fig.tight_layout()
     fig.savefig(out)
     plt.close(fig)
@@ -173,16 +194,21 @@ def write_markdown(results, cross, sps, out):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--no-gpt2", action="store_true")
+    ap.add_argument("--charts-only", action="store_true", help="redraw charts/markdown from results.json")
     args = ap.parse_args()
     REPORTS.mkdir(exist_ok=True)
-    sps = speakers()
-    results = {}
-    for sp in sps:
-        print(f"evaluating {sp} ...")
-        results[sp] = evaluate_speaker(sp, not args.no_gpt2)
-    cross = cross_perplexity(sps)
-    (REPORTS / "results.json").write_text(json.dumps({"results": results, "cross_perplexity": cross,
-                                                      "speakers": sps}, indent=2), encoding="utf-8")
+    if args.charts_only:
+        data = json.loads((REPORTS / "results.json").read_text(encoding="utf-8"))
+        sps, results, cross = data["speakers"], data["results"], data["cross_perplexity"]
+    else:
+        sps = speakers()
+        results = {}
+        for sp in sps:
+            print(f"evaluating {sp} ...", flush=True)
+            results[sp] = evaluate_speaker(sp, not args.no_gpt2)
+        cross = cross_perplexity(sps)
+        (REPORTS / "results.json").write_text(json.dumps({"results": results, "cross_perplexity": cross,
+                                                          "speakers": sps}, indent=2), encoding="utf-8")
     grouped_bars(results, "perplexity", "Validation perplexity (lower is better)", "perplexity per token",
                  REPORTS / "perplexity.png")
     grouped_bars(results, "copy_rate", "Copied 8-word windows (lower = more original)", "% of windows",

@@ -4,9 +4,9 @@
       {
         "model": "Held-out human text",
         "perplexity": null,
-        "copy_rate": 3.483016695451928,
-        "distinct_1": 0.25669859780646953,
-        "distinct_2": 0.7613163010274924
+        "copy_rate": 5.306224310041104,
+        "distinct_1": 0.3626413717621306,
+        "distinct_2": 0.8456204379562043
       },
       {
         "model": "Markov order 1",
@@ -35,15 +35,29 @@
         "copy_rate": 87.06618447021529,
         "distinct_1": 0.32996389891696754,
         "distinct_2": 0.8024557602022391
+      },
+      {
+        "model": "GPT-2 base, not fine-tuned (gpt2-medium)",
+        "perplexity": 45.29079081235904,
+        "copy_rate": 0.0,
+        "distinct_1": 0.4007139669790272,
+        "distinct_2": 0.8776785714285714
+      },
+      {
+        "model": "GPT-2 fine-tuned (gpt2-medium)",
+        "perplexity": 33.89058861182439,
+        "copy_rate": 0.0,
+        "distinct_1": 0.2545846817691478,
+        "distinct_2": 0.7345323741007195
       }
     ],
     "lincoln": [
       {
         "model": "Held-out human text",
         "perplexity": null,
-        "copy_rate": 0.44001388814700065,
-        "distinct_1": 0.2683192590574775,
-        "distinct_2": 0.8032697547683924
+        "copy_rate": 0.5533932086614174,
+        "distinct_1": 0.3141932875050546,
+        "distinct_2": 0.8337378640776699
       },
       {
         "model": "Markov order 1",
@@ -72,15 +86,29 @@
         "copy_rate": 89.58323340249368,
         "distinct_1": 0.3140619171950765,
         "distinct_2": 0.7988805970149254
+      },
+      {
+        "model": "GPT-2 base, not fine-tuned (gpt2-medium)",
+        "perplexity": 27.962200228598135,
+        "copy_rate": 0.0,
+        "distinct_1": 0.3804573804573805,
+        "distinct_2": 0.8698003327787022
+      },
+      {
+        "model": "GPT-2 fine-tuned (gpt2-medium)",
+        "perplexity": 23.24483033955211,
+        "copy_rate": 0.0,
+        "distinct_1": 0.2726602800294768,
+        "distinct_2": 0.7858459270180612
       }
     ],
     "obama": [
       {
         "model": "Held-out human text",
         "perplexity": null,
-        "copy_rate": 0.4973988719929956,
-        "distinct_1": 0.27528505849252183,
-        "distinct_2": 0.8024289099526066
+        "copy_rate": 0.16264462809917357,
+        "distinct_1": 0.36752136752136755,
+        "distinct_2": 0.8672862453531599
       },
       {
         "model": "Markov order 1",
@@ -109,6 +137,20 @@
         "copy_rate": 88.2458649127847,
         "distinct_1": 0.35442101368849427,
         "distinct_2": 0.8275351591413768
+      },
+      {
+        "model": "GPT-2 base, not fine-tuned (gpt2-medium)",
+        "perplexity": 20.167225068750597,
+        "copy_rate": 0.0,
+        "distinct_1": 0.36215978928884984,
+        "distinct_2": 0.8757136583223539
+      },
+      {
+        "model": "GPT-2 fine-tuned (gpt2-medium)",
+        "perplexity": 17.853724674391955,
+        "copy_rate": 0.047619047619047616,
+        "distinct_1": 0.3176470588235294,
+        "distinct_2": 0.8332679482149863
       }
     ]
   },
