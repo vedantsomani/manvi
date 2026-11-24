@@ -6,7 +6,8 @@ SPEAKER_DIR = ROOT / "data" / "speakers"
 CHUNK_WORDS = 200   # split unit
 VAL_EVERY = 10      # every 10th chunk -> validation (10%)
 
-DISPLAY = {"gandhi": "Mahatma Gandhi", "lincoln": "Abraham Lincoln", "obama": "Barack Obama"}
+DISPLAY = {"gandhi": "Mahatma Gandhi", "lincoln": "Abraham Lincoln", "obama": "Barack Obama",
+           "modi": "Narendra Modi", "trump": "Donald Trump"}
 
 
 def speakers(speaker_dir=SPEAKER_DIR):

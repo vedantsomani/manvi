@@ -197,8 +197,10 @@ with st.sidebar:
 
 # ---------------------------------------------------------------- header
 st.title("🐱 CATbot")
-st.markdown("**A copy-cat speech generator.** CATbot learns how Mahatma Gandhi, Abraham Lincoln and "
-            "Barack Obama put words together, then writes new text in their style. It compares a "
+_names = [display_name(s) for s in SPEAKERS]
+_who = _names[0] if len(_names) == 1 else ", ".join(_names[:-1]) + " and " + _names[-1]
+st.markdown(f"**A copy-cat speech generator.** CATbot learns how {_who} "
+            "put words together, then writes new text in their style. It compares a "
             "classic **n-gram Markov chain** with a **fine-tuned GPT-2** and checks how much of the "
             "output is copied word-for-word from the real speeches "
             "(<mark style='background:rgba(235,104,52,.25)'>highlighted</mark>).",
@@ -325,10 +327,11 @@ with tab_res:
 
 # ---------------------------------------------------------------- how it works tab
 with tab_how:
+    _words = "; ".join(f"{display_name(s)} {markov(s).meta.get('train_words', markov(s).n_tokens):,} "
+                       "training words" for s in SPEAKERS)
     st.markdown(f"""
-**1. Data.** Public-domain speeches: Gandhi's *Freedom's Battle* (1922), eight Lincoln speeches (1837–1865)
-and fourteen Obama addresses (2009–2017). Between 40k and 74k words per speaker. Every 10th 200-word chunk
-is held out for testing.
+**1. Data.** Transcripts of real speeches: {_words}. Sources are listed in DATA.md.
+Every 10th 200-word chunk is held out for testing.
 
 **2. Markov chain.** For every run of *n* words in the training text, CATbot counts which word came next.
 To write, it looks at the last *n* words and picks the next word in proportion to those counts
@@ -336,7 +339,8 @@ To write, it looks at the last *n* words and picks the next word in proportion t
 *n − 1* words, and so on.
 
 **3. GPT-2.** A 355M-parameter transformer (gpt2-medium), pre-trained on web text and then
-**fine-tuned** for 3 epochs on each speaker using an NVIDIA H200 GPU.
+**fine-tuned** for 3 epochs on each speaker using an NVIDIA H200 GPU (optional: the app falls back to
+the Markov chain when the weights are not installed).
 
 **4. Is it just copying?** Every {WINDOW}-word window of the output is checked against the training
 text. Higher Markov orders sound more fluent because they copy more: order 4 reproduces most of its

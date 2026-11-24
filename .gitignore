@@ -6,3 +6,4 @@ data/clean/*.txt
 model/*_gpt2/
 gpt2_runs/
 .pytest_cache/
+model/_retired/

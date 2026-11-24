@@ -4,9 +4,14 @@ Sources (see DATA.md for details and licences):
   gandhi  - "Freedom's Battle" (1922), Project Gutenberg #10366
   lincoln - "Noted Speeches of Abraham Lincoln", Gutenberg #48364, plus three speeches
             from "The Papers and Writings of Abraham Lincoln", Gutenberg #3253
-  obama   - 13 speeches from the archived Obama White House site (US government works)
+  obama   - 14 speeches from the archived Obama White House site (US government works)
+  modi    - English texts of PM Narendra Modi's speeches from pmindia.gov.in
+  trump   - remarks from the archived Trump White House site (2017-2021)
 
-Run:  python fetch_data.py   then   python clean.py
+Modi and Trump URLs are frozen in data/sources/<speaker>.txt so the dataset is
+reproducible. `python fetch_data.py --discover modi trump` rebuilds those lists.
+
+Run:  python fetch_data.py modi trump obama   then   python clean.py
 """
 import argparse
 import html
@@ -148,21 +153,180 @@ def fetch_obama():
     return out
 
 
-SPEAKERS = {"gandhi": fetch_gandhi, "lincoln": fetch_lincoln, "obama": fetch_obama}
+# ---------------------------------------------------------------- shared helpers
+SOURCES = ROOT / "data" / "sources"
+SPEAKER_LABEL = re.compile(r"^\s*([A-Z][A-Z .'-]{1,40}|Q):\s*")
+
+
+def paragraphs(fragment):
+    """Plain-text paragraphs from an HTML fragment."""
+    fragment = re.sub(r"<script.*?</script>|<style.*?</style>", " ", fragment, flags=re.S | re.I)
+    out = []
+    for block in re.split(r"</p>|</div>|<br\s*/?>", fragment):
+        text = html.unescape(re.sub(r"<[^>]+>", " ", block)).replace("\xa0", " ")
+        text = re.sub(r"\s+", " ", text).strip()
+        if text:
+            out.append(text)
+    return out
+
+
+def only_speaker(paras, label="THE PRESIDENT"):
+    """Keep paragraphs spoken by `label`. A labelled paragraph switches speaker;
+    unlabelled paragraphs belong to whoever spoke last (start: the main speaker)."""
+    current, keep = label, []
+    for t in paras:
+        if re.match(r"^Q[\s:]", t):
+            continue  # a reporter's question interrupts but does not change the main speaker
+        m = SPEAKER_LABEL.match(t)
+        if m:
+            current = m.group(1).strip()
+            t = t[m.end():]
+        if current == label and t:
+            keep.append(t)
+    return keep
+
+
+def latin_ratio(text):
+    letters = [c for c in text if c.isalpha()]
+    return sum(c.isascii() for c in letters) / max(1, len(letters))
+
+
+def read_sources(speaker):
+    path = SOURCES / f"{speaker}.txt"
+    if not path.exists():
+        raise SystemExit(f"{path} missing. Run: python fetch_data.py --discover {speaker}")
+    return [l.strip() for l in path.read_text(encoding="utf-8").splitlines()
+            if l.strip() and not l.startswith("#")]
+
+
+# ---------------------------------------------------------------- Modi
+MODI_BASE = "https://www.pmindia.gov.in/en/news_updates/"
+MODI_LIST = "https://www.pmindia.gov.in/en/tag/pmspeech/page/{}/"
+
+
+def modi_page_text(page):
+    i = page.find("class='news-bg'")
+    j = page.find('class="tweet-container"', i)
+    body = page[i:j if j > 0 else None]
+    paras = [t for t in paragraphs(body) if latin_ratio(t) > 0.9]  # drop Hindi/other-script lines
+    # Drop the doctype debris some pages carry and one-word salutations without punctuation.
+    paras = [t for t in paras if not t.startswith(("<!DOCTYPE", "DOCTYPE")) and "W3C" not in t]
+    return "\n\n".join(paras)
+
+
+def discover_modi(pages=8, min_words=300):
+    slugs = []
+    for n in range(1, pages + 1):
+        listing = get(MODI_LIST.format(n))
+        for slug in re.findall(r'news_updates/([a-z0-9-]+)/', listing):
+            if slug not in slugs:
+                slugs.append(slug)
+        time.sleep(0.3)
+    keep = []
+    for slug in slugs:
+        text = modi_page_text(get(MODI_BASE + slug + "/"))
+        if len(text.split()) >= min_words:  # English text of a real speech
+            keep.append(slug)
+        time.sleep(0.3)
+    return keep
+
+
+def fetch_modi():
+    out = {}
+    for slug in read_sources("modi"):
+        out[slug[:80]] = modi_page_text(get(MODI_BASE + slug + "/"))
+        time.sleep(0.3)
+    return out
+
+
+# ---------------------------------------------------------------- Trump
+TRUMP_BASE = "https://trumpwhitehouse.archives.gov/briefings-statements/"
+TRUMP_LIST = "https://trumpwhitehouse.archives.gov/remarks/page/{}/"
+# Formats that are mostly Q&A with reporters or other people talking.
+TRUMP_SKIP = re.compile(r"departure|roundtable|bilateral|meeting|call|gaggle|briefing|signing|"
+                        r"press-conference|exchange|before-|discussion|listening|tour|q-a|interview|town-hall")
+
+
+def trump_page_text(page):
+    i = page.find("page-content__content")
+    body = page[i:page.find("</article>", i) if "</article>" in page[i:] else None]
+    paras = paragraphs(body[body.find(">") + 1:])
+    if "All News" in paras:  # share buttons and breadcrumbs come before the transcript
+        paras = paras[paras.index("All News") + 1:]
+    out = []
+    for t in paras:
+        if t in ("END", "###") or t.startswith("END "):
+            break
+        if t in ("The White House",) or t.startswith("Share on ") or out[-1:] == [t] \
+                or re.match(r"^\d{1,2}:\d{2}(\s*[AP]\.?M\.?)?\s", t):
+            continue
+        if len(t.split()) <= 6 and not re.search(r"[.!?]$", t) and not SPEAKER_LABEL.match(t):
+            continue  # venue / city header lines such as "Prescott Regional Airport"
+        out.append(t)
+    return "\n\n".join(only_speaker(out))
+
+
+def discover_trump(pages=40, min_words=800, target_words=80_000):
+    slugs = []
+    for n in range(1, pages + 1):
+        for slug in re.findall(r"briefings-statements/(remarks-president-trump-[a-z0-9-]+)/", get(TRUMP_LIST.format(n))):
+            if slug not in slugs and not TRUMP_SKIP.search(slug):
+                slugs.append(slug)
+        time.sleep(0.3)
+    keep, total = [], 0
+    for slug in slugs:
+        try:
+            page = get(TRUMP_BASE + slug + "/")
+        except RuntimeError:  # a few archived links are dead
+            continue
+        words = len(trump_page_text(page).split())
+        if words >= min_words:
+            keep.append(slug)
+            total += words
+            if total >= target_words:  # keep speakers roughly the same size
+                break
+        time.sleep(0.3)
+    return keep
+
+
+def fetch_trump():
+    out = {}
+    for slug in read_sources("trump"):
+        out[slug.replace("remarks-president-trump-", "")[:80]] = trump_page_text(get(TRUMP_BASE + slug + "/"))
+        time.sleep(0.3)
+    return out
+
+
+SPEAKERS = {"gandhi": fetch_gandhi, "lincoln": fetch_lincoln, "obama": fetch_obama,
+            "modi": fetch_modi, "trump": fetch_trump}
+DISCOVER = {"modi": discover_modi, "trump": discover_trump}
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("speakers", nargs="*", default=list(SPEAKERS), help="subset of: " + ", ".join(SPEAKERS))
+    ap.add_argument("speakers", nargs="*", default=["modi", "trump", "obama"],
+                    help="any of: " + ", ".join(SPEAKERS))
+    ap.add_argument("--discover", action="store_true",
+                    help="rebuild data/sources/<speaker>.txt URL lists from the live sites")
     args = ap.parse_args()
+    if args.discover:
+        SOURCES.mkdir(parents=True, exist_ok=True)
+        for sp in args.speakers:
+            slugs = DISCOVER[sp]()
+            (SOURCES / f"{sp}.txt").write_text("\n".join(slugs) + "\n", encoding="utf-8")
+            print(f"{sp}: {len(slugs)} speeches -> {SOURCES / (sp + '.txt')}")
+        return
     for sp in args.speakers:
         folder = RAW / sp
         folder.mkdir(parents=True, exist_ok=True)
+        for old in folder.glob("*.txt"):
+            old.unlink()  # this folder is fully regenerated from the sources
         docs = SPEAKERS[sp]()
         words = 0
         for name, text in docs.items():
-            (folder / f"{name}.txt").write_text(text + "\n", encoding="utf-8")
-            words += len(text.split())
+            if text.strip():
+                (folder / f"{name}.txt").write_text(text + "\n", encoding="utf-8")
+                words += len(text.split())
         print(f"{sp:8s} {len(docs):3d} document(s) {words:8,d} words -> {folder}")
 
 
