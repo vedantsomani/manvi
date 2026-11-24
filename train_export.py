@@ -1,8 +1,7 @@
 """Clean transcripts, train the Markov model and export it as JSON."""
-import json
 from pathlib import Path
 from clean import clean_text, read_text
-from model import tokenize, build_model
+from model import build_model, save_json, tokenize
 
 ROOT = Path(__file__).resolve().parent
 RAW = ROOT / "data" / "raw"
@@ -28,20 +27,10 @@ def main():
     if not docs:
         raise SystemExit("Transcript files contain too little usable text.")
     transitions, starts = build_model(docs, ORDER)
-    payload = {
-        "format_version": 1,
-        "model_type": "word-level Markov chain",
-        "order": ORDER,
-        "source_files": [p.name for p in files],
-        "word_count": total_words,
-        "token_count": sum(map(len, docs)),
-        "transitions": {"\u241f".join(state): dict(counts) for state, counts in transitions.items()},
-        "starts": [list(s) for s in starts]
-    }
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+    save_json(transitions, starts, OUT, ORDER, source_files=[p.name for p in files],
+              word_count=total_words, token_count=sum(map(len, docs)))
     print(f"Trained Markov model from {len(files)} transcript(s)")
-    print(f"Words: {total_words:,} | Tokens: {payload['token_count']:,} | States: {len(transitions):,}")
+    print(f"Words: {total_words:,} | Tokens: {sum(map(len, docs)):,} | States: {len(transitions):,}")
     print(f"Saved model: {OUT}")
     if total_words < 20000:
         print("WARNING: Dataset is small; output may repeat training text. Add more transcripts if possible.")

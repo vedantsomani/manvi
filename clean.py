@@ -5,7 +5,7 @@ import re
 import unicodedata
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent
 
 STAGE_WORDS = (r"applause|laughter|laughs|cheers|cheering|music|audience|interruption|"
                r"inaudible|pause|crosstalk|slogans|video|chanting|clapping|translation")

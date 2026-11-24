@@ -1,0 +1,11 @@
+# Extra packages for GPT-2 fine-tuning (train_gpt2.py) and the app's GPT-2 mode.
+# Install torch with the CUDA build that matches your GPU first, e.g.
+#   pip install torch==2.14.1 --index-url https://download.pytorch.org/whl/cu130
+-r requirements.txt
+torch==2.14.1
+transformers==5.18.0
+datasets==5.1.0
+accelerate==1.15.0
+safetensors==0.8.0
+pytest==9.1.1
+requests==2.34.2

@@ -2,3 +2,7 @@
 __pycache__/
 *.pyc
 .streamlit/secrets.toml
+data/clean/*.txt
+model/*_gpt2/
+gpt2_runs/
+.pytest_cache/

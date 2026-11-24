@@ -1,1 +1,6 @@
-streamlit>=1.40,<2.0
+# Runtime for the Streamlit app (Markov models). Light enough for Streamlit Community Cloud.
+streamlit==1.64.0
+plotly==7.1.0
+matplotlib==3.11.2
+pandas==2.3.3
+numpy==2.5.3
