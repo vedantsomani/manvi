@@ -148,7 +148,10 @@ def why_panel(res, speaker):
     st.markdown(f"Context used (order {t['order_used']}): **{html.escape(ctx)}** → chose "
                 f"**{html.escape(t['chosen'])}** (p = {t['p']:.2f}, {t['n_options']} possible next "
                 f"tokens).{note}")
-    top = t["top"][::-1]
+    top = list(t["top"])
+    if t["chosen"] not in [w for w, _ in top]:  # a low-probability pick: still show it
+        top.append((t["chosen"], t["p"]))
+    top = top[::-1]
     words = [w for w, _ in top]
     fig = go.Figure(go.Bar(
         x=[p for _, p in top], y=words, orientation="h",
