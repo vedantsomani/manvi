@@ -35,6 +35,20 @@
         "copy_rate": 80.94818218965078,
         "distinct_1": 0.37128898910184144,
         "distinct_2": 0.862406015037594
+      },
+      {
+        "model": "GPT-2 base, not fine-tuned (gpt2-medium)",
+        "perplexity": 33.62590478475294,
+        "copy_rate": 0.0,
+        "distinct_1": 0.40448013524936605,
+        "distinct_2": 0.8980972515856237
+      },
+      {
+        "model": "GPT-2 fine-tuned (gpt2-medium)",
+        "perplexity": 21.943796755622422,
+        "copy_rate": 0.0,
+        "distinct_1": 0.3201514514093395,
+        "distinct_2": 0.8236531986531986
       }
     ],
     "obama": [
@@ -72,6 +86,20 @@
         "copy_rate": 89.15575328135665,
         "distinct_1": 0.35777777777777775,
         "distinct_2": 0.8595776213412375
+      },
+      {
+        "model": "GPT-2 base, not fine-tuned (gpt2-medium)",
+        "perplexity": 20.115314695354602,
+        "copy_rate": 0.0,
+        "distinct_1": 0.367816091954023,
+        "distinct_2": 0.8845995893223819
+      },
+      {
+        "model": "GPT-2 fine-tuned (gpt2-medium)",
+        "perplexity": 17.805502376808516,
+        "copy_rate": 0.0,
+        "distinct_1": 0.312280701754386,
+        "distinct_2": 0.8404836193447738
       }
     ],
     "trump": [
@@ -109,6 +137,20 @@
         "copy_rate": 75.35121068966997,
         "distinct_1": 0.33591032083494393,
         "distinct_2": 0.8221191028615623
+      },
+      {
+        "model": "GPT-2 base, not fine-tuned (gpt2-medium)",
+        "perplexity": 23.855795268793774,
+        "copy_rate": 0.0,
+        "distinct_1": 0.3721518987341772,
+        "distinct_2": 0.8585901224145209
+      },
+      {
+        "model": "GPT-2 fine-tuned (gpt2-medium)",
+        "perplexity": 19.395709612803863,
+        "copy_rate": 1.6653539541713314,
+        "distinct_1": 0.2514014661492022,
+        "distinct_2": 0.7320966350301984
       }
     ]
   },

@@ -1,10 +1,10 @@
 # 🐱 CATbot: a copy-cat speech generator
 
-CATbot learns how **Mahatma Gandhi**, **Abraham Lincoln** and **Barack Obama** put words together, then writes new text in each person's style. It compares a classic **n-gram Markov chain** with a **fine-tuned GPT-2** and measures how much of what each model writes is new and how much is copied word for word from the real speeches.
+CATbot learns how **Narendra Modi**, **Donald Trump** and **Barack Obama** put words together, then writes new text in each person's style. It compares a classic **n-gram Markov chain** with a **fine-tuned GPT-2** and measures how much of what each model writes is new and how much is copied word for word from the real speeches.
 
 ![Side-by-side generation](docs/screenshots/generate.png)
 
-> Generated text is synthetic. Never present it as a real quote from any of these people.
+> Generated text is synthetic. Never present it as a real quote from any of these people. They are active political figures, and fake political quotes spread easily.
 
 ## The problem
 
@@ -18,7 +18,7 @@ A "copy-cat" text generator is easy to build and easy to fool yourself with. Out
 
 | Step | What happens | Code |
 |---|---|---|
-| Data | Public-domain speeches: 73.6k words of Gandhi, 39.9k of Lincoln, 67.1k of Obama ([sources](DATA.md)) | `fetch_data.py`, `clean.py` |
+| Data | Real speech transcripts, capped at about 80k words per speaker so the speakers are comparable: Modi 81.6k words (47 speeches), Trump 85.8k (34), Obama 67.1k (14). See [DATA.md](DATA.md). | `fetch_data.py`, `clean.py` |
 | Split | Every 10th 200-word chunk is held out (10%), identical for all models | `corpus.py` |
 | Markov chain | Counts which word follows every 1-, 2-, 3- and 4-word context. Generates with **temperature** sampling, and **backs off** to a shorter context when a context was never seen. Witten-Bell smoothing gives a proper perplexity. | `model.py`, `train_markov.py` |
 | GPT-2 | `gpt2-medium` (355M parameters) fine-tuned per speaker with the Hugging Face `Trainer`: bf16, 3 epochs, cosine LR, best checkpoint by validation loss, on an **NVIDIA H200** (about 2 minutes per speaker) | `train_gpt2.py`, `neural.py` |
@@ -30,7 +30,8 @@ A "copy-cat" text generator is easy to build and easy to fool yourself with. Out
 ```mermaid
 flowchart LR
     subgraph Data
-        A[Gutenberg mirror<br/>Obama WH archive] -->|fetch_data.py| B[data/raw/&lt;speaker&gt;/*.txt]
+        A1[Trump & Obama<br/>White House archives] -->|fetch_data.py| B[data/raw/&lt;speaker&gt;/*.txt]
+        A2[pmindia.gov.in<br/>browser export] -->|fetch_data.py --modi-json| B
         B -->|clean.py| C[data/speakers/&lt;speaker&gt;.txt]
         C -->|corpus.py<br/>90 / 10 split| D[(train)]
         C --> E[(validation)]
@@ -57,20 +58,22 @@ Measured on the 10% of each speaker's text that no model saw during training. Ea
 
 | Speaker | Model | Perplexity ↓ | Distinct-2 ↑ | Copy rate ↓ |
 |---|---|---:|---:|---:|
-| Gandhi | Real speech (held out) | – | 0.846 | 5.3% |
-| Gandhi | Markov, order 1 | 229.6 | 0.829 | 0.0% |
-| Gandhi | Markov, order 2 | 222.2 | 0.841 | 5.3% |
-| Gandhi | Markov, order 4 | 234.9 | 0.802 | **87.1%** |
-| Gandhi | GPT-2, not fine-tuned | 45.3 | 0.878 | 0.0% |
-| Gandhi | **GPT-2, fine-tuned** | **33.9** | 0.735 | 0.0% |
-| Lincoln | Markov, order 2 | 209.5 | 0.802 | 5.5% |
-| Lincoln | Markov, order 4 | 231.0 | 0.799 | **89.6%** |
-| Lincoln | GPT-2, not fine-tuned | 28.0 | 0.870 | 0.0% |
-| Lincoln | **GPT-2, fine-tuned** | **23.2** | 0.786 | 0.0% |
-| Obama | Markov, order 2 | 253.4 | 0.867 | 6.5% |
-| Obama | Markov, order 4 | 280.1 | 0.828 | **88.2%** |
-| Obama | GPT-2, not fine-tuned | 20.2 | 0.876 | 0.0% |
-| Obama | **GPT-2, fine-tuned** | **17.9** | 0.833 | 0.0% |
+| Modi | Real speech (held out) | – | 0.827 | 1.5% |
+| Modi | Markov, order 1 | 171.0 | 0.875 | 0.0% |
+| Modi | Markov, order 2 | 160.4 | 0.848 | 3.8% |
+| Modi | Markov, order 4 | 181.4 | 0.862 | **80.9%** |
+| Modi | GPT-2, not fine-tuned | 33.6 | 0.898 | 0.0% |
+| Modi | **GPT-2, fine-tuned** | **21.9** | 0.824 | 0.0% |
+| Trump | Real speech (held out) | – | 0.807 | 0.3% |
+| Trump | Markov, order 2 | 139.7 | 0.846 | 3.5% |
+| Trump | Markov, order 4 | 160.3 | 0.822 | **75.4%** |
+| Trump | GPT-2, not fine-tuned | 23.9 | 0.859 | 0.0% |
+| Trump | **GPT-2, fine-tuned** | **19.4** | 0.732 | 1.7% |
+| Obama | Real speech (held out) | – | 0.867 | 0.2% |
+| Obama | Markov, order 2 | 254.5 | 0.871 | 7.3% |
+| Obama | Markov, order 4 | 281.2 | 0.860 | **89.2%** |
+| Obama | GPT-2, not fine-tuned | 20.1 | 0.885 | 0.0% |
+| Obama | **GPT-2, fine-tuned** | **17.8** | 0.840 | 0.0% |
 
 <p>
 <img src="reports/perplexity.png" width="49%"> <img src="reports/copy_rate.png" width="49%">
@@ -78,22 +81,23 @@ Measured on the 10% of each speaker's text that no model saw during training. Ea
 
 What the numbers show:
 
-- **Higher Markov orders sound better because they copy.** At order 4, 87–90% of 8-word windows are lifted verbatim from the training speeches. Order 2 copies 5–7%, close to how often Gandhi repeats his own phrases (5.3%) though more than Lincoln or Obama do (under 1%). Order 2 is the default for that reason.
-- **Higher orders don't predict new text better.** With 40–70k words per speaker, most 3- and 4-word contexts in unseen text never appeared in training, so validation perplexity *rises* from order 2 to order 4.
-- **Fine-tuned GPT-2 is about 6–14× better at predicting the speaker** (perplexity 18–34 vs 209–253), and it copies **0%**. Its pre-training on web text lets it generalise instead of memorise.
-- **Fine-tuning works.** It lowers perplexity by 11–25% compared with the same model without fine-tuning. It also lowers distinct-2: the model narrows its vocabulary to the speaker's favourite words and phrases.
-- **Each speaker's style is measurably distinct.** A speaker's own Markov model scores their held-out text 2.6–5× better than another speaker's model does (diagonal ≈ 210–250, off-diagonal 577–1107). The game's "computer judge" uses this to guess who wrote a passage.
+- **Higher Markov orders sound better because they copy.** At order 4, 75–89% of 8-word windows are lifted verbatim from the training speeches. Order 2 copies only 3.5–7%, so it is the app's default.
+- **Higher orders don't predict new text better.** With about 80k words per speaker, most 3- and 4-word contexts in unseen text never appeared in training, so validation perplexity *rises* from order 2 to order 4.
+- **Fine-tuned GPT-2 predicts each speaker 7–14× better than the best Markov chain** (perplexity 18–22 vs 140–255) and almost never copies. Its pre-training on web text lets it generalise instead of memorise.
+- **Fine-tuning helps most for Modi.** Perplexity falls 35% for Modi, 19% for Trump and 11% for Obama. Plain GPT-2 already knows a lot of American political English. Indian English (lakh, crore, *Viksit Bharat*, "Friends,") is new to it.
+- **Trump is the most predictable speaker.** He has the lowest Markov perplexity (140) and the lowest diversity in real speech. His fine-tuned GPT-2 is the most repetitive of the three (distinct-2 0.73), the only one that copies at all (1.7%), and it picks up his repeated phrases.
+- **Each speaker's style is measurably distinct.** A speaker's own Markov model scores their held-out text 2.6–6.9× better than another speaker's model does. Obama and Trump are closer to each other than either is to Modi. The game's "computer judge" uses this to guess who wrote a passage.
 
-| Markov model ↓ / held-out text → | Gandhi | Lincoln | Obama |
+| Markov model ↓ / held-out text → | Modi | Obama | Trump |
 |---|---:|---:|---:|
-| Gandhi | **222** | 577 | 1107 |
-| Lincoln | 665 | **209** | 973 |
-| Obama | 870 | 743 | **253** |
+| Modi | **160** | 799 | 743 |
+| Obama | 835 | **254** | 400 |
+| Trump | 1111 | 648 | **140** |
 
-GPT-2 fine-tuning curves (validation loss decreases steadily with no overfitting after 3 epochs):
+GPT-2 fine-tuning curves (validation loss decreases with no overfitting after 3 epochs):
 
 <p>
-<img src="reports/gandhi_gpt2_loss.png" width="32%"> <img src="reports/lincoln_gpt2_loss.png" width="32%"> <img src="reports/obama_gpt2_loss.png" width="32%">
+<img src="reports/modi_gpt2_loss.png" width="32%"> <img src="reports/trump_gpt2_loss.png" width="32%"> <img src="reports/obama_gpt2_loss.png" width="32%">
 </p>
 
 ## The app
@@ -101,7 +105,7 @@ GPT-2 fine-tuning curves (validation loss decreases steadily with no overfitting
 | | |
 |---|---|
 | ![Why this word](docs/screenshots/why_this_word.png) | ![Guess the speaker](docs/screenshots/game.png) |
-| **Why this word?** For each Markov step: the context it used, every candidate next word and its probability, and whether it had to back off. | **Guess the speaker.** You and a perplexity-based computer judge each guess who wrote the passage. |
+| **Why this word?** For each Markov step: the context it used, every candidate next word and its probability (the chosen word in colour, even when it was a long shot), and whether it had to back off. | **Guess the speaker.** You and a computer judge each guess who wrote the passage. The judge looks only at word choice (an order-1 Markov model per speaker). |
 
 - Sidebar: speaker, model (Markov / GPT-2 / side-by-side), n-gram order 1–4, temperature, length, seed, start phrase.
 - Copied 8-word stretches are highlighted, with a **% copied** metric and the longest copied run.
@@ -127,21 +131,26 @@ The GPT-2 weights (about 680 MB per speaker) are **not** in git. To enable GPT-2
 
 ```bash
 pip install -r requirements-gpu.txt     # install the CUDA build of torch for your GPU first
-python train_gpt2.py                    # all speakers, gpt2-medium (≈2 min each on an H200)
+python train_gpt2.py                    # all speakers, gpt2-medium (≈2-3 min each on an H200)
 python train_gpt2.py --base distilgpt2 --batch 4   # smaller GPU / quick test
 ```
 
 ### Rebuild everything from scratch
 
 ```bash
-python fetch_data.py      # download the public-domain speeches
-python clean.py           # -> data/speakers/<speaker>.txt
-python train_markov.py    # -> model/<speaker>_markov.json
-python train_gpt2.py      # -> model/<speaker>_gpt2/ (GPU)
-python evaluate.py        # -> reports/  (add --no-gpt2 to skip GPT-2)
-python generate.py --speaker lincoln --order 2 --temperature 0.8 --seed 7   # command-line generation
-python -m pytest -q       # tests
+python fetch_data.py trump obama     # download transcripts
+python fetch_data.py modi            # import the Modi browser export (see DATA.md)
+python clean.py                      # -> data/speakers/<speaker>.txt
+python train_markov.py               # -> model/<speaker>_markov.json
+python train_gpt2.py                 # -> model/<speaker>_gpt2/ (GPU)
+python evaluate.py                   # -> reports/  (add --no-gpt2 to skip GPT-2)
+python generate.py --speaker trump --order 2 --temperature 0.8 --seed 7   # command-line generation
+python -m pytest -q                  # tests
 ```
+
+### Adding or swapping a speaker
+
+Put plain-text speeches in `data/raw/<name>/*.txt`, add a display name to `DISPLAY` in `corpus.py`, then run `clean.py`, `train_markov.py`, `train_gpt2.py <name>` and `evaluate.py`. The app, the game and the charts pick up every speaker in `data/speakers/` automatically.
 
 ### Deploy to Streamlit Community Cloud
 
@@ -157,10 +166,11 @@ model.py          n-gram Markov model (orders 1-4, temperature, backoff, Witten-
 copycheck.py      copy rate, copied-token mask, distinct-n
 corpus.py         speaker list + shared 90/10 split
 neural.py         optional GPT-2 helpers (lazy torch import)
-fetch_data.py     download sources      clean.py     clean + merge per speaker
-train_markov.py   train Markov models   train_gpt2.py  fine-tune GPT-2
-evaluate.py       metrics, tables, charts  generate.py  CLI generator
-data/             raw + cleaned speeches (DATA.md has sources)
+fetch_data.py     download/import sources   clean.py     clean + merge per speaker
+train_markov.py   train Markov models       train_gpt2.py  fine-tune GPT-2
+evaluate.py       metrics, tables, charts   generate.py  CLI generator
+scripts/          modi_browser_export.js (browser-side export for pmindia.gov.in)
+data/             raw + cleaned speeches, source URL lists (DATA.md has details)
 model/            *_markov.json (committed), *_gpt2/ (gitignored)
 reports/          results.md, results.json, charts, loss curves
 tests/            pytest: cleaning, model, copy-check, app smoke test
@@ -168,17 +178,18 @@ tests/            pytest: cleaning, model, copy-check, app smoke test
 
 ## Limitations
 
-- **Small data.** 40–74k words per speaker is tiny for language modelling. It is the main reason high-order Markov chains copy.
+- **Small data.** About 80k words per speaker is tiny for language modelling. It is the main reason high-order Markov chains copy.
+- **Modi's text is mostly translated.** He usually speaks in Hindi, so the models learn the style of the official English translations, not his own word choice.
+- **Different sources, different speech types.** The Trump set is mostly 2020 campaign-style remarks, while Obama's is formal addresses. Some of the "style" difference is the occasion, not only the person.
 - **Markov chains have no meaning.** They track only the last few words, so the text drifts between topics and sometimes isn't grammatical.
 - **GPT-2 brings outside knowledge.** It can produce fluent text with facts, names or opinions the speaker never expressed. That makes its output *more* misleading as a "quote", not less.
 - **Copy rate is a lower bound.** It only catches exact 8-word matches. Close paraphrases are not counted.
 - **Perplexity comparison.** Both models are scored per word/punctuation token on the same text, but the Markov model ignores case and GPT-2 does not. That makes GPT-2's task slightly harder.
-- **Source noise.** Gandhi's book quotes a few letters by other people in full. The Obama transcripts are of delivered speeches, including ad-libs.
-- **Speaker choice.** APJ Abdul Kalam was the original third speaker, but his speeches are still under copyright. See [DATA.md](DATA.md).
 
 ## Future work
 
-- Add more speakers and more text per speaker, and use the 1950s+ speeches of Indian leaders once their copyright allows it.
+- Choose the third speaker and add more speeches per speaker.
+- Train on Modi's original Hindi speeches with a multilingual model.
 - Kneser-Ney smoothing and a tuned interpolation for the n-gram model.
 - Parameter-efficient fine-tuning (LoRA) of a larger model, and a copy penalty during decoding.
 - A human evaluation: can classmates tell real held-out paragraphs from generated ones?
@@ -186,6 +197,4 @@ tests/            pytest: cleaning, model, copy-check, app smoke test
 
 ## Credits
 
-Source texts: Project Gutenberg and the Obama White House archive (public domain; details in [DATA.md](DATA.md)). Built with Python, Streamlit, Plotly, Matplotlib, PyTorch and Hugging Face Transformers. Older Colab notebooks from the first version of the project are kept in `CATbot_Colab_Train.ipynb` and `copycat_bot_colab.ipynb`. They export the old single-speaker format and are not used by the current app.
-#   m a n v i  
- 
+Source texts: the archived Trump and Obama White House websites and the Prime Minister's Office of India (details in [DATA.md](DATA.md)). Built with Python, Streamlit, Plotly, Matplotlib, PyTorch and Hugging Face Transformers. The Colab notebooks (`CATbot_Colab_Train.ipynb`, `copycat_bot_colab.ipynb`) are from the first version of the project. They export the old single-speaker format and are not used by the current app.

@@ -82,7 +82,7 @@ def render(tokens, mask, n_prompt=0):
             piece = f"<mark>{piece}</mark>"
         sep = "" if (tok in PUNCT or i == 0) else " "
         parts.append(sep + piece)
-    out = "".join(parts).replace("</mark> <mark>", " ")
+    out = "".join(parts).replace("</mark> <mark>", " ").replace("</mark><mark>", "")
     return f'<div class="cat-out">{out}</div><div class="cat-label">🤖 {LABEL}</div>'
 
 
@@ -139,7 +139,8 @@ def why_panel(res, speaker):
                "how likely each option was after temperature.")
     labels = [f"{k + 1}. {t['chosen']}" for k, (_, t) in enumerate(steps)]
     pick = st.select_slider("Step", options=range(len(steps)), format_func=lambda k: labels[k],
-                            value=min(5, len(steps) - 1), label_visibility="collapsed")
+                            value=next((k for k, (_, s) in enumerate(steps) if s["n_options"] >= 5),
+                                       min(5, len(steps) - 1)), label_visibility="collapsed")
     i, t = steps[pick]
     ctx = " ".join(t["context"]) if t["context"] else "(nothing: plain word frequency)"
     req = st.session_state.get("order_used_req", t["order_used"])
@@ -248,9 +249,12 @@ with tab_gen:
 
 # ---------------------------------------------------------------- game tab
 with tab_game:
-    st.markdown("CATbot writes a short passage as one of the three speakers. **Can you tell who?** "
-                "A simple computer judge plays along: it picks the speaker whose Markov model finds "
-                "the passage least surprising (lowest perplexity).")
+    st.markdown(f"CATbot writes a short passage as one of the {len(SPEAKERS)} speakers. **Can you tell who?** "
+                "A simple computer judge plays along. It looks only at word choice (which words each "
+                "speaker tends to use) and picks the speaker whose vocabulary makes the passage least "
+                "surprising.")
+    st.caption("Fair-play note: the judge has read the same speeches the Markov chain learned from, so it "
+               "has a home advantage on Markov passages. GPT-2 passages are the fairer test.")
     g = st.session_state.setdefault("game", {"score": 0, "rounds": 0, "judge": 0, "round": None})
 
     def new_round():
@@ -264,7 +268,7 @@ with tab_game:
         else:
             res = run_markov(sp, "", 60, 2, 0.9, s)
         toks = res["tokens"]
-        scores = {c: markov(c).perplexity([toks], 2)[0] for c in SPEAKERS}
+        scores = {c: markov(c).perplexity([toks], 1)[0] for c in SPEAKERS}  # word choice only
         g["round"] = {"speaker": sp, "tokens": toks, "model": "GPT-2" if use_gpt2 else "Markov order 2",
                       "judge": min(scores, key=scores.get), "scores": scores, "guess": None}
 
@@ -349,4 +353,4 @@ output verbatim. The *Results* tab shows this trade-off in numbers.
 
 st.markdown('<div class="cat-footer">CATbot · student project · built with Python, Streamlit, '
             'Hugging Face Transformers · Generated text is synthetic and must not be presented as a '
-            'real quote. Source texts are public domain; see DATA.md.</div>', unsafe_allow_html=True)
+            'real quote. Sources are listed in DATA.md.</div>', unsafe_allow_html=True)
