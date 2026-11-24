@@ -1,0 +1,67 @@
+Thank you very much.
+
+Union Cabinet colleagues Ashwini Vaishnaw ji, Jitin Prasada ji, all industry leaders, CEOs, delegates, and virtually connected hundreds of universities and institutes – the future of India, my young companions. And here present, the large number of enthusiastic youth, ladies and gentlemen!
+
+This is the fifth edition of Semicon India. I welcome you all. I extend a special welcome to the guests who have come from abroad.
+
+Friends,
+
+Today is also Vishwakarma Jayanti. I extend my best wishes to all countrymen on Vishwakarma Jayanti. In our tradition, Lord Vishwakarma is considered the symbol of the power of construction and creation. And see the coincidence – Semicon India begins today itself. On one side, our centuries‑old tradition of creation, and on the other side, the technology and vision of the 21st century – this is our inspiration for self‑reliant India, for developed India.
+
+Friends,
+
+Every citizen is committed to building a developed India. If we look at just the past 15 days – I draw your attention only to 15 days – we can see the direction and speed with which India is moving forward. In this September, just 10 days ago, the Global Fintech Fest was held in Mumbai. There was discussion on inclusive finance through agentic AI, tokenization, and quantum technologies. During the same period, nearly 3,000 kilometers of Dedicated Freight Corridor became fully operational in India. I am talking about September’s 10 days, not long ago. This will speed up freight movement in the country, improve logistics, and give new strength to manufacturing.
+
+Friends,
+
+In this same period, in this September itself, India’s quarterly GDP report came. And even in this challenging period, India achieved 7.8 percent growth. And during the same time, Japan’s credit rating agency upgraded India’s sovereign rating. And this happened after three decades – nearly 35 years. That means, on one side India’s economy is growing, and on the other side, the world’s trust in India is also increasing.
+
+Friends,
+
+Another big picture of this trust was seen just three days ago at the BRICS Summit. India successfully hosted this summit. The unanimous adoption of the New Delhi Declaration is another big proof of the world’s trust in India.
+
+Friends,
+
+Amidst these achievements of India, this Semicon India event has become even more important. Its first edition was in 2022. Since then we meet every year, but every year the subject of our discussion has changed. In the first edition, we talked about policy. In the next editions, the discussion moved forward. We began talking about projects – from signing files to laying foundation stones. Last year we began discussing pilot lines and test chips. How the first samples began to come out of India’s units – this was discussed. And this year, we are talking about commercial production. Now chips are coming out of India’s plants and reaching customers in India and the world. And just now, in Mohali and Surat, commercial production has started in two more plants. I congratulate them as well.
+
+Friends,
+
+For any country, reaching here in such a short time is not easy. This is not a sector where you set up a factory and the work is done. It takes decades to build technological capabilities. Wherever semiconductor ecosystems have been built in the world, they have been prepared after decades of effort. But India, with your cooperation, has worked simultaneously on chip design, manufacturing, equipment manufacturing, materials ecosystem, testing capability – and has shown success. In this journey, you industry leaders have been the major stakeholders. You are the pillars of India’s success, you are the partners in our journey.
+
+Friends,
+
+In the semiconductor industry, there is a word – “tape‑out.” This is the day when a chip, after design completion, goes into production. But work does not stop after tape‑out. On that very day, work begins on the next version. And India is doing the same. India has started the second phase of the Semiconductor Mission. The size of our first phase was about 8 billion dollars, while the second phase we have set at 13.5 billion dollars. Moving on the Reform Express, we have made further reforms in this sector. Now international companies can also collaborate with our startups, Indian design companies, and OCI‑owned companies. That means whether it is policies, funds, regulatory frameworks – whatever is needed for the success of your projects, the Government of India is taking every step.
+
+Friends,
+
+Our effort is that fabless companies grow in India, and intellectual property creation also happens in India. Whether it is making different types of compound semiconductors, making silicon photonics part of the ecosystem, or enabling infrastructure for AI – all this is necessary. And in this direction, we must move forward together. The foundation needed for this has already been prepared. India is also focusing greatly on strengthening supply chains. Many reforms have been made for this. To the leaders of equipment companies present here, I say – do not lag behind in taking advantage of this. For leaders in chemicals, gases, and materials too, golden opportunities await in India. We want the entire ecosystem to grow together. For this, the demand pipeline is also ready. So far, 12 projects have been approved, and in the next phase this scope will expand further.
+
+Friends,
+
+Another advantage for all of you in India is youth – talented, skilled manpower. Today we have a very large pool of engineering talent. India has thousands of engineering colleges, and every year India produces lakhs of engineers. Once, a gentleman from an American company came to meet me. He said, “If we want to recruit engineers in our country, we call them, and they all fit in one room. But in India, if we call engineers, even a football field is too small.” This is India’s strength.
+
+And Friends,
+
+For chip designing, large‑scale skilling work is underway. Just before coming here, I met some young companions from industry on this very campus – all students. These students gifted me chips they had designed themselves. Our government has set a target to train one lakh engineering students for the semiconductor industry. And as you were told, we have already trained more than 70,000 youth. Such a large talent pool is nothing less than a gold mine for all of you.
+
+Friends,
+
+Amidst these government efforts, today I also appeal to the youth – young talents who are doing research in India should come forward. Those youth who are doing research abroad should also connect with the development of advanced technologies in India. I urge industry leaders to lead R&D in the country. This benefits industry, and it also strengthens India’s youth power.
+
+Friends,
+
+The advancing semiconductor industry also faces some challenges, which you are all familiar with. For years, people in your industry talked about transistor size. As transistors became smaller, computing became faster and more efficient. Even today this question is important. But now, with the arrival of Artificial Intelligence, some new questions have arisen before this industry. In the past two years, the global semiconductor market has grown by more than 20 percent. And a very big part of this growth is due to demand created by AI. That means, today if you are working on AI, the challenges are not only about what is inside the chip, but also about what is happening around it. Bringing memory closer to the processor, connecting many chips in such a way that they work together as one system, transferring huge amounts of data from here to there without delay, managing heat and power – these are many challenges before the semiconductor industry. Amidst these challenges, the world most needs new and reliable manufacturing locations. And India – I assure you – India is continuously preparing itself for this.
+
+Friends,
+
+Another major issue before today’s semiconductor industry is energy security. The chips being made for AI are used in AI data centers. In these data centers, thousands of high‑performance processors work together, processing huge amounts of data. As AI expands, the need for computing power will increase at the same pace. And as computing power increases, the need for electricity will also increase greatly. Therefore, investment in the power sector is very important. Where our plants are located, electricity must be available on time, in the required quantity when needed – this is very important. That is why India is making very large investments in the power sector today. In the past decade, our installed solar energy capacity has increased from about 2 gigawatts to more than 160 gigawatts – from 2 to 160. In nuclear energy too, we are moving forward rapidly. This sector has been opened to private players. We are also working on small modular reactors. In the past decade, India has also expanded its transmission network.
+
+Friends,
+
+This expansion of power infrastructure in India is also a great strength for our semiconductor ecosystem. India is taking every step needed to make itself a preferred destination for the semiconductor industry.
+
+Friends,
+
+India is the Mother of Democracy. Just a few years ago, our Constitution completed 75 years. When such a country succeeds in a critical industry, it strengthens the entire world’s supply chain. And today, when supply chains are being weaponized, its importance increases even more. We must see the developments happening in India from this larger perspective. India’s aspirations are before you, and the new opportunities being created in India are ready to welcome you. Once again, I extend many congratulations to all of you for this event.
+
+Thank you very much.

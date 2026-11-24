@@ -11,6 +11,7 @@ def test_tokenize_detokenize_roundtrip():
     toks = tokenize("hello, world. it's fine!")
     assert toks == ["hello", ",", "world", ".", "it's", "fine", "!"]
     assert detokenize(toks) == "Hello, world. It's fine!"
+    assert tokenize("24,000 rupees, up 3.5% in 2024.") == ["24,000", "rupees", ",", "up", "3.5%", "in", "2024", "."]
 
 
 def test_counts_and_candidates():

@@ -4,37 +4,31 @@ Validation = 10% held-out text per speaker. 20 samples x 150 tokens per model, t
 
 | Speaker | Model | Perplexity ↓ | Distinct-1 ↑ | Distinct-2 ↑ | Copy rate (8-word) ↓ |
 |---|---|---:|---:|---:|---:|
-| Mahatma Gandhi | Held-out human text | – | 0.363 | 0.846 | 5.3% |
-| Mahatma Gandhi | Markov order 1 | 229.6 | 0.347 | 0.829 | 0.0% |
-| Mahatma Gandhi | Markov order 2 | 222.2 | 0.350 | 0.841 | 5.3% |
-| Mahatma Gandhi | Markov order 3 | 231.0 | 0.340 | 0.813 | 54.0% |
-| Mahatma Gandhi | Markov order 4 | 234.9 | 0.330 | 0.802 | 87.1% |
-| Mahatma Gandhi | GPT-2 base, not fine-tuned (gpt2-medium) | 45.3 | 0.401 | 0.878 | 0.0% |
-| Mahatma Gandhi | GPT-2 fine-tuned (gpt2-medium) | 33.9 | 0.255 | 0.735 | 0.0% |
-| Abraham Lincoln | Held-out human text | – | 0.314 | 0.834 | 0.6% |
-| Abraham Lincoln | Markov order 1 | 202.0 | 0.321 | 0.814 | 0.0% |
-| Abraham Lincoln | Markov order 2 | 209.5 | 0.312 | 0.802 | 5.5% |
-| Abraham Lincoln | Markov order 3 | 225.0 | 0.325 | 0.795 | 59.9% |
-| Abraham Lincoln | Markov order 4 | 231.0 | 0.314 | 0.799 | 89.6% |
-| Abraham Lincoln | GPT-2 base, not fine-tuned (gpt2-medium) | 28.0 | 0.380 | 0.870 | 0.0% |
-| Abraham Lincoln | GPT-2 fine-tuned (gpt2-medium) | 23.2 | 0.273 | 0.786 | 0.0% |
-| Barack Obama | Held-out human text | – | 0.368 | 0.867 | 0.2% |
-| Barack Obama | Markov order 1 | 250.2 | 0.356 | 0.862 | 0.0% |
-| Barack Obama | Markov order 2 | 253.4 | 0.374 | 0.867 | 6.5% |
-| Barack Obama | Markov order 3 | 272.5 | 0.360 | 0.839 | 56.4% |
-| Barack Obama | Markov order 4 | 280.1 | 0.354 | 0.828 | 88.2% |
-| Barack Obama | GPT-2 base, not fine-tuned (gpt2-medium) | 20.2 | 0.362 | 0.876 | 0.0% |
-| Barack Obama | GPT-2 fine-tuned (gpt2-medium) | 17.9 | 0.318 | 0.833 | 0.0% |
+| Narendra Modi | Held-out human text | – | 0.359 | 0.827 | 1.5% |
+| Narendra Modi | Markov order 1 | 171.0 | 0.386 | 0.875 | 0.0% |
+| Narendra Modi | Markov order 2 | 160.4 | 0.384 | 0.848 | 3.8% |
+| Narendra Modi | Markov order 3 | 172.7 | 0.383 | 0.870 | 45.5% |
+| Narendra Modi | Markov order 4 | 181.4 | 0.371 | 0.862 | 80.9% |
+| Barack Obama | Held-out human text | – | 0.367 | 0.867 | 0.2% |
+| Barack Obama | Markov order 1 | 250.6 | 0.372 | 0.870 | 0.0% |
+| Barack Obama | Markov order 2 | 254.5 | 0.384 | 0.871 | 7.3% |
+| Barack Obama | Markov order 3 | 273.6 | 0.376 | 0.879 | 60.5% |
+| Barack Obama | Markov order 4 | 281.2 | 0.358 | 0.860 | 89.2% |
+| Donald Trump | Held-out human text | – | 0.309 | 0.807 | 0.3% |
+| Donald Trump | Markov order 1 | 144.5 | 0.341 | 0.829 | 0.0% |
+| Donald Trump | Markov order 2 | 139.7 | 0.345 | 0.846 | 3.5% |
+| Donald Trump | Markov order 3 | 152.8 | 0.314 | 0.812 | 35.6% |
+| Donald Trump | Markov order 4 | 160.3 | 0.336 | 0.822 | 75.4% |
 
 Perplexity is per word/punctuation token for every model (GPT-2's total BPE log-loss is divided by the same token count), so the numbers are comparable. The *held-out human text* row is the speaker's real unseen speech. Its copy rate shows how often a person naturally repeats their own 8-word phrases.
 
 ## Cross-speaker perplexity (Markov order 2)
 
-| model \ text | Mahatma Gandhi | Abraham Lincoln | Barack Obama |
+| model \ text | Narendra Modi | Barack Obama | Donald Trump |
 |---|---:|---:|---:|
-| Mahatma Gandhi | 222 | 577 | 1107 |
-| Abraham Lincoln | 665 | 209 | 973 |
-| Barack Obama | 870 | 743 | 253 |
+| Narendra Modi | 160 | 799 | 743 |
+| Barack Obama | 835 | 254 | 400 |
+| Donald Trump | 1111 | 648 | 140 |
 
 ![perplexity](perplexity.png)
 

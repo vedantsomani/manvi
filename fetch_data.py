@@ -9,12 +9,16 @@ Sources (see DATA.md for details and licences):
   trump   - remarks from the archived Trump White House site (2017-2021)
 
 Modi and Trump URLs are frozen in data/sources/<speaker>.txt so the dataset is
-reproducible. `python fetch_data.py --discover modi trump` rebuilds those lists.
+reproducible. `python fetch_data.py --discover trump` rebuilds the Trump list.
+pmindia.gov.in only serves web browsers, so Modi's text is exported once in a browser with
+scripts/modi_browser_export.js and imported with `python fetch_data.py modi --modi-json FILE`.
 
 Run:  python fetch_data.py modi trump obama   then   python clean.py
 """
 import argparse
 import html
+import json
+import shutil
 import re
 import time
 import urllib.request
@@ -200,43 +204,29 @@ def read_sources(speaker):
 
 
 # ---------------------------------------------------------------- Modi
-MODI_BASE = "https://www.pmindia.gov.in/en/news_updates/"
-MODI_LIST = "https://www.pmindia.gov.in/en/tag/pmspeech/page/{}/"
+MODI_EXPORT = ROOT / "data" / "sources" / "modi_browser_export.json"
 
 
-def modi_page_text(page):
-    i = page.find("class='news-bg'")
-    j = page.find('class="tweet-container"', i)
-    body = page[i:j if j > 0 else None]
-    paras = [t for t in paragraphs(body) if latin_ratio(t) > 0.9]  # drop Hindi/other-script lines
-    # Drop the doctype debris some pages carry and one-word salutations without punctuation.
-    paras = [t for t in paras if not t.startswith(("<!DOCTYPE", "DOCTYPE")) and "W3C" not in t]
-    return "\n\n".join(paras)
-
-
-def discover_modi(pages=8, min_words=300):
-    slugs = []
-    for n in range(1, pages + 1):
-        listing = get(MODI_LIST.format(n))
-        for slug in re.findall(r'news_updates/([a-z0-9-]+)/', listing):
-            if slug not in slugs:
-                slugs.append(slug)
-        time.sleep(0.3)
-    keep = []
-    for slug in slugs:
-        text = modi_page_text(get(MODI_BASE + slug + "/"))
-        if len(text.split()) >= min_words:  # English text of a real speech
-            keep.append(slug)
-        time.sleep(0.3)
-    return keep
-
-
-def fetch_modi():
-    out = {}
-    for slug in read_sources("modi"):
-        out[slug[:80]] = modi_page_text(get(MODI_BASE + slug + "/"))
-        time.sleep(0.3)
+def fetch_modi(target_words=80_000):
+    """pmindia.gov.in refuses non-browser clients, so the text is exported once from a real
+    browser with scripts/modi_browser_export.js (see DATA.md) and imported from that JSON."""
+    path = MODI_EXPORT
+    if not path.exists():
+        raise SystemExit(f"{path} not found. Export it in a browser with scripts/modi_browser_export.js, "
+                         "then run: python fetch_data.py modi --modi-json <downloaded file>")
+    data = json.loads(path.read_text(encoding="utf-8"))
+    out, total = {}, 0
+    for slug in data["order"]:  # newest first, as listed on the site
+        text = data["texts"][slug]
+        out[slug[:80]] = text
+        total += len(text.split())
+        if total >= target_words:  # keep speakers roughly the same size
+            break
+    SOURCES.mkdir(parents=True, exist_ok=True)
+    (SOURCES / "modi.txt").write_text("\n".join(out) + "\n", encoding="utf-8")
     return out
+
+
 
 
 # ---------------------------------------------------------------- Trump
@@ -299,7 +289,7 @@ def fetch_trump():
 
 SPEAKERS = {"gandhi": fetch_gandhi, "lincoln": fetch_lincoln, "obama": fetch_obama,
             "modi": fetch_modi, "trump": fetch_trump}
-DISCOVER = {"modi": discover_modi, "trump": discover_trump}
+DISCOVER = {"trump": discover_trump}
 
 
 def main():
@@ -308,7 +298,11 @@ def main():
                     help="any of: " + ", ".join(SPEAKERS))
     ap.add_argument("--discover", action="store_true",
                     help="rebuild data/sources/<speaker>.txt URL lists from the live sites")
+    ap.add_argument("--modi-json", help="browser export of Modi speeches (scripts/modi_browser_export.js)")
     args = ap.parse_args()
+    if args.modi_json:
+        MODI_EXPORT.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(args.modi_json, MODI_EXPORT)  # keep a copy so the dataset can be rebuilt
     if args.discover:
         SOURCES.mkdir(parents=True, exist_ok=True)
         for sp in args.speakers:

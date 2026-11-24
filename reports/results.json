@@ -1,105 +1,40 @@
 {
   "results": {
-    "gandhi": [
+    "modi": [
       {
         "model": "Held-out human text",
         "perplexity": null,
-        "copy_rate": 5.306224310041104,
-        "distinct_1": 0.3626413717621306,
-        "distinct_2": 0.8456204379562043
+        "copy_rate": 1.5277356130108424,
+        "distinct_1": 0.3593260188087774,
+        "distinct_2": 0.826734613876911
       },
       {
         "model": "Markov order 1",
-        "perplexity": 229.6390632261082,
+        "perplexity": 170.95397702125382,
         "copy_rate": 0.0,
-        "distinct_1": 0.3465888361911711,
-        "distinct_2": 0.8291970802919708
+        "distinct_1": 0.3861311102690413,
+        "distinct_2": 0.8745261561789234
       },
       {
         "model": "Markov order 2",
-        "perplexity": 222.22289139435006,
-        "copy_rate": 5.280821790269344,
-        "distinct_1": 0.35018050541516244,
-        "distinct_2": 0.8407367280606717
+        "perplexity": 160.43658836320876,
+        "copy_rate": 3.8307821205208894,
+        "distinct_1": 0.3843524496771743,
+        "distinct_2": 0.8476443768996961
       },
       {
         "model": "Markov order 3",
-        "perplexity": 230.97985095804216,
-        "copy_rate": 53.99740063761256,
-        "distinct_1": 0.34023991275899673,
-        "distinct_2": 0.8130909090909091
+        "perplexity": 172.7164545466535,
+        "copy_rate": 45.48983549711817,
+        "distinct_1": 0.38341574743248386,
+        "distinct_2": 0.8702435312024354
       },
       {
         "model": "Markov order 4",
-        "perplexity": 234.8834046344397,
-        "copy_rate": 87.06618447021529,
-        "distinct_1": 0.32996389891696754,
-        "distinct_2": 0.8024557602022391
-      },
-      {
-        "model": "GPT-2 base, not fine-tuned (gpt2-medium)",
-        "perplexity": 45.29079081235904,
-        "copy_rate": 0.0,
-        "distinct_1": 0.4007139669790272,
-        "distinct_2": 0.8776785714285714
-      },
-      {
-        "model": "GPT-2 fine-tuned (gpt2-medium)",
-        "perplexity": 33.89058861182439,
-        "copy_rate": 0.0,
-        "distinct_1": 0.2545846817691478,
-        "distinct_2": 0.7345323741007195
-      }
-    ],
-    "lincoln": [
-      {
-        "model": "Held-out human text",
-        "perplexity": null,
-        "copy_rate": 0.5533932086614174,
-        "distinct_1": 0.3141932875050546,
-        "distinct_2": 0.8337378640776699
-      },
-      {
-        "model": "Markov order 1",
-        "perplexity": 202.03053917146255,
-        "copy_rate": 0.0,
-        "distinct_1": 0.3214019388516033,
-        "distinct_2": 0.8135024244684819
-      },
-      {
-        "model": "Markov order 2",
-        "perplexity": 209.4779355944763,
-        "copy_rate": 5.465046023187023,
-        "distinct_1": 0.3116591928251121,
-        "distinct_2": 0.8022429906542056
-      },
-      {
-        "model": "Markov order 3",
-        "perplexity": 224.99686914724094,
-        "copy_rate": 59.91750473577103,
-        "distinct_1": 0.3250093179276929,
-        "distinct_2": 0.7949291573452647
-      },
-      {
-        "model": "Markov order 4",
-        "perplexity": 230.99877553344476,
-        "copy_rate": 89.58323340249368,
-        "distinct_1": 0.3140619171950765,
-        "distinct_2": 0.7988805970149254
-      },
-      {
-        "model": "GPT-2 base, not fine-tuned (gpt2-medium)",
-        "perplexity": 27.962200228598135,
-        "copy_rate": 0.0,
-        "distinct_1": 0.3804573804573805,
-        "distinct_2": 0.8698003327787022
-      },
-      {
-        "model": "GPT-2 fine-tuned (gpt2-medium)",
-        "perplexity": 23.24483033955211,
-        "copy_rate": 0.0,
-        "distinct_1": 0.2726602800294768,
-        "distinct_2": 0.7858459270180612
+        "perplexity": 181.41883832258964,
+        "copy_rate": 80.94818218965078,
+        "distinct_1": 0.37128898910184144,
+        "distinct_2": 0.862406015037594
       }
     ],
     "obama": [
@@ -107,73 +42,96 @@
         "model": "Held-out human text",
         "perplexity": null,
         "copy_rate": 0.16264462809917357,
-        "distinct_1": 0.36752136752136755,
+        "distinct_1": 0.3671497584541063,
         "distinct_2": 0.8672862453531599
       },
       {
         "model": "Markov order 1",
-        "perplexity": 250.16370007079288,
+        "perplexity": 250.56954626753546,
         "copy_rate": 0.0,
-        "distinct_1": 0.3563175549757734,
-        "distinct_2": 0.8624161073825504
+        "distinct_1": 0.37235228539576365,
+        "distinct_2": 0.8698884758364313
       },
       {
         "model": "Markov order 2",
-        "perplexity": 253.4056507518699,
-        "copy_rate": 6.541690590505335,
-        "distinct_1": 0.37380073800738006,
-        "distinct_2": 0.867109634551495
+        "perplexity": 254.47675761360264,
+        "copy_rate": 7.294907935690027,
+        "distinct_1": 0.3838685586258402,
+        "distinct_2": 0.8714979454613373
       },
       {
         "model": "Markov order 3",
-        "perplexity": 272.4685744178763,
-        "copy_rate": 56.400551126177355,
-        "distinct_1": 0.36007462686567165,
-        "distinct_2": 0.8394923478910041
+        "perplexity": 273.5603122755673,
+        "copy_rate": 60.46574048070173,
+        "distinct_1": 0.37611275964391694,
+        "distinct_2": 0.8790352504638219
       },
       {
         "model": "Markov order 4",
-        "perplexity": 280.09455773802307,
-        "copy_rate": 88.2458649127847,
-        "distinct_1": 0.35442101368849427,
-        "distinct_2": 0.8275351591413768
+        "perplexity": 281.1663643363543,
+        "copy_rate": 89.15575328135665,
+        "distinct_1": 0.35777777777777775,
+        "distinct_2": 0.8595776213412375
+      }
+    ],
+    "trump": [
+      {
+        "model": "Held-out human text",
+        "perplexity": null,
+        "copy_rate": 0.32077010435012604,
+        "distinct_1": 0.30860420650095605,
+        "distinct_2": 0.8068094873756695
       },
       {
-        "model": "GPT-2 base, not fine-tuned (gpt2-medium)",
-        "perplexity": 20.167225068750597,
+        "model": "Markov order 1",
+        "perplexity": 144.52072345002534,
         "copy_rate": 0.0,
-        "distinct_1": 0.36215978928884984,
-        "distinct_2": 0.8757136583223539
+        "distinct_1": 0.34103156274056967,
+        "distinct_2": 0.8294185598767809
       },
       {
-        "model": "GPT-2 fine-tuned (gpt2-medium)",
-        "perplexity": 17.853724674391955,
-        "copy_rate": 0.047619047619047616,
-        "distinct_1": 0.3176470588235294,
-        "distinct_2": 0.8332679482149863
+        "model": "Markov order 2",
+        "perplexity": 139.71328990061266,
+        "copy_rate": 3.5466406117073626,
+        "distinct_1": 0.3449612403100775,
+        "distinct_2": 0.8456766188445134
+      },
+      {
+        "model": "Markov order 3",
+        "perplexity": 152.75086662768086,
+        "copy_rate": 35.6261793875521,
+        "distinct_1": 0.3141644152836743,
+        "distinct_2": 0.8123552123552124
+      },
+      {
+        "model": "Markov order 4",
+        "perplexity": 160.32152018257722,
+        "copy_rate": 75.35121068966997,
+        "distinct_1": 0.33591032083494393,
+        "distinct_2": 0.8221191028615623
       }
     ]
   },
   "cross_perplexity": [
     [
-      222.22289139435006,
-      577.2415136532594,
-      1106.9896024296952
+      160.43658836320876,
+      799.4829591721831,
+      742.8071466509988
     ],
     [
-      665.3083296776954,
-      209.4779355944763,
-      972.9393379112483
+      835.0688225236655,
+      254.47675761360264,
+      399.88745135920294
     ],
     [
-      869.7056143915356,
-      742.7531992925045,
-      253.4056507518699
+      1111.1015170050296,
+      647.8866270752621,
+      139.71328990061266
     ]
   ],
   "speakers": [
-    "gandhi",
-    "lincoln",
-    "obama"
+    "modi",
+    "obama",
+    "trump"
   ]
 }

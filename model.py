@@ -15,7 +15,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 # A token is a word (apostrophes/hyphens allowed inside) or one punctuation mark.
-TOKEN_RE = re.compile(r"[A-Za-z0-9]+(?:['-][A-Za-z0-9]+)*|[.!?,;:]")
+TOKEN_RE = re.compile(r"\d+(?:[.,]\d+)+%?|[A-Za-z0-9]+(?:['-][A-Za-z0-9]+)*%?|[.!?,;:]")  # 24,000 / 3.5% stay whole
 SENTENCE_END = {".", "!", "?"}
 PUNCT = SENTENCE_END | {",", ";", ":"}
 MAX_ORDER = 4
